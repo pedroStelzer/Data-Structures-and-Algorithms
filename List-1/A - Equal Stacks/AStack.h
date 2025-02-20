@@ -16,7 +16,7 @@ template <typename E> class AStack: public Stack<E>
         AStack(int size = DEFAULT_SIZE) 
         {
             maxSize = size;
-            top = size;
+            top = 0;
             listArray = new E[size];
         }
 
@@ -33,7 +33,7 @@ template <typename E> class AStack: public Stack<E>
         int sum() const
         {
             int sum = 0;
-            for(int i = 0; i < maxSize-top; i++)
+            for(int i = 0; i < maxSize; i++)
             {
                 sum += listArray[i];
             }
@@ -47,32 +47,22 @@ template <typename E> class AStack: public Stack<E>
 
         void push(const E &it) 
         {
-            //Assert(top != maxSize, "Stack is full");
-            listArray[--top] = it;
+            listArray[top++] = it;
         }
 
         E pop() 
         {
-            //Assert(top != 0, "Stack is empty");
-            return listArray[top++];
+            return listArray[--top];
         }
 
         const E &topValue() const 
         {
-            //Assert(top != 0, "Stack is empty");
             return listArray[top - 1];
         }
 
         int length() const 
         {
-            return maxSize-top;
-        }
-
-        void Assert(bool condition, const char* message) const {
-            if (!condition) {
-                std::cerr << "Assertion failed: " << message << std::endl;
-                std::exit(EXIT_FAILURE);
-            }
+            return top;
         }
 };
 
