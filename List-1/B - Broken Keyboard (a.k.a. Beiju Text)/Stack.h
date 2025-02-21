@@ -12,7 +12,6 @@ template <typename E> class Stack
 
         Stack() {}
         virtual ~Stack() {}
-        virtual void clear() = 0;
         virtual void push(const E &it) = 0;
         virtual E pop() = 0;
         virtual const E &topValue() const = 0;

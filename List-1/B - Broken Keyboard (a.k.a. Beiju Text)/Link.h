@@ -41,30 +41,6 @@ template <typename E> class Link
             element = it;
         }
 
-        /*static Link<E> *freelist = NULL;
-
-        static Link<E> get(E it, Link<E> nextval = NULL)
-        {
-            if(freelist == NULL)
-            {
-                return new Link(it, nextval);
-            }
-            else
-            {
-                Link<E> temp = freelist;
-                freelist = freelist.getNext();
-                temp.setELement(it);
-                temp.setNext(nextval);
-                return temp;
-            }
-        }*/
-
-        /*void release()
-        {
-            next = freelist;
-            freelist = this;
-        }*/
-
 };
 
 #endif // LINK_H

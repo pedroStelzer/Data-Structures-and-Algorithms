@@ -9,7 +9,6 @@ int main()
 {
     string input, result;
 
-
     while(cin >> input)
     {
         cout << beijuText(input) << endl;
@@ -65,12 +64,11 @@ string beijuText(string text)
 
     lenStack = textAll.length();
     string finalText = "";
-    
+
     int i = 0;
     while(textAll.length() != 0)
     {
         finalText += textAll.topValue();
-        cout << finalText[i] << endl;
         textAll.pop();
 
         i++;
