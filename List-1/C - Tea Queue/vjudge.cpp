@@ -18,9 +18,11 @@ template <typename E> class Queue
 
         Queue(int size = DEFAULT_SIZE)
         {
-            maxSize = size;
-            queue = new E[size];
+            maxSize = size+1;
+            queue = new E[maxSize];
             timeQueue = 1;
+            front = 1;
+            rear = 0;
         }
 
         ~Queue()
@@ -97,7 +99,7 @@ class Person
 
 };
 
-vector<int> secondGetsTea(Queue<Person> teaQueue);
+vector<int> secondGetsTea(Queue<Person> &teaQueue);
 
 int main()
 {
@@ -121,9 +123,9 @@ int main()
             cin >> secComes;
             cin >> secLeaves;
 
-            Person *persons = new Person[secComes, secLeaves];
+            Person person(secComes, secLeaves);
 
-            teaQueue.insert(persons[j]);
+            teaQueue.insert(person);
             
         }
 
@@ -147,21 +149,40 @@ int main()
     return 0;
 };
 
-vector<int> secondGetsTea(Queue<Person> teaQueue)
+vector<int> secondGetsTea(Queue<Person> &teaQueue)
 {
     vector<int> secGetsTea;
 
-    for(int i = 0; i < teaQueue.length(); i++)
-    {
+    int lenQueue = teaQueue.length();
+
+    //cout << "\n" << lenQueue << endl;
+
+    while(teaQueue.length() > 0)
+    {   
+        //cout << "\n\n" << teaQueue.length() << "\n\n";
         Person person = teaQueue.remove();
+
+        cout << "\n-----------Inicio Debug-----------\n";
+
+        cout << "tempo queue: " << teaQueue.getTimeQueue() << "\n";
+        cout << "tempo pessoa: " << person.getSecLeaves() << "\n";
         
         if(teaQueue.getTimeQueue() <= person.getSecLeaves())
         {
             secGetsTea.push_back(teaQueue.getTimeQueue());
             teaQueue.incrementTimeQueue();
+
+            cout << "\noi\n";
+        }
+        else
+        {   
+            cout << "\nkkkkkkkk\n";
+            secGetsTea.push_back(0);
         }
         
     }
+
+    cout << "\n-----------Fim Debug-----------\n";
     
 
     return secGetsTea;
