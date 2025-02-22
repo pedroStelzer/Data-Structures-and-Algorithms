@@ -31,7 +31,7 @@ template <typename E> class Link
         }
 
         // Metodo que seta o proximo no
-        Link<E> setNext(Link<E> nextval)
+        void setNext(Link<E> *nextval)
         {
             next = nextval;
         }
@@ -127,11 +127,114 @@ template <typename E> class LStack
         void moveStackString(string &text)
         {
             while(this->length() != 0)
-            {
-                text += this->topValue();
+            {   
+                if(this->topValue() != "")
+                {   
+                    text += this->topValue();
+                }
                 this->pop();
             }
         }
+
+        // Metodo que imprime todos os elementos da pilha
+        void printStack()
+        {
+            Link<E> *a = top;
+            while(a != NULL)
+            {
+                cout << a->getElement() << " ";
+                a = a->getNext();
+            }
+
+            cout << "\n-----------------\n";
+        }
+};
+
+template <typename E> class LQueue
+{
+    private:
+
+        Link<E> *front;
+        Link<E> *rear;
+        int size;
+
+    public:
+
+        LQueue(int sz = DEFAULT_SIZE)
+        {
+            front = rear = new Link<E>();
+            size = 0;
+        }
+
+        ~LQueue()
+        {
+            clear();
+            delete front;
+        }
+
+        void clear()
+        {
+            while (front->getNext() != NULL)
+            {
+                Link<E> *temp = front->getNext();
+                front->setNext(temp->getNext());
+                delete temp;
+            }
+            rear = front;
+            size = 0;
+
+        }
+
+        void insert(const E &it)
+        {
+            rear->setNext(new Link<E>(it, NULL));
+            rear = rear->getNext();
+            size++;
+        }
+
+        E remove()
+        {
+            E it = front->getNext()->getElement();
+            Link<E> *ltemp = front->getNext();
+            front->setNext(ltemp->getNext());
+            delete ltemp;
+            size--;
+            return it;
+        }
+
+        const E &frontValue() const
+        {
+            return (front->getNext())->getElement();
+        }
+
+        int length() const
+        {
+            return size;
+        }
+
+        // Metodo que move todos os elementos da fila para outra pilha
+        void moveQueue(LStack<E> &stack)
+        {
+            while(this->length() != 0)
+            {
+                stack.push(this->frontValue());
+                this->remove();
+            }
+        }
+
+        // Metodo que imprime todos os elementos da fila. somente pra debug
+        void printQueue()
+        {
+            Link<E> *a = front->getNext();
+            while(a != NULL)
+            {
+                cout << a->getElement() << " ";
+                a = a->getNext();
+            }
+
+            cout << "\n-----------------\n";
+        }
+
 };
 
 string beijuText(string text);
@@ -141,7 +244,7 @@ int main()
     string input, result;
 
     // enquanto houver entrada de dados, o loop continua
-    while(cin >> input)
+    while(getline(cin, input))
     {
         cout << beijuText(input) << endl; // imprime o resultado da função beijuText
     }
@@ -154,9 +257,10 @@ string beijuText(string text)
     char character;
     bool changeStack = false;
     string finalText = "";
-    LStack<char> textNormal;
-    LStack<char> textBeiju;
-    LStack<char> textAll;
+    LStack<string> textNormal;
+    LQueue<string> textBeiju;
+    LStack<string> textAll;
+    string strText;
     
     int lenText = text.length();
 
@@ -165,52 +269,42 @@ string beijuText(string text)
     {
         character = text[i];
         
-        if(character == '[') // se o caractere for '[', muda a pilha
+        if(character == '[') // se o caractere for '[', muda a pilha normal para a fila Beiju
         {
             changeStack = true;
+            textNormal.push(strText);
+            strText = "";
         }
-        else if(character == ']') // se o caractere for ']', volta a pilha ao normal
+        else if(character == ']') // se o caractere for ']', muda a fila Beiju para a pilha normal
         {
-            changeStack = false;
+            changeStack = false; //faz a troca
+            textBeiju.insert(strText);
+            strText = "";
         }
 
         if(!changeStack && character != ']') // pilha nao mudou e caractere nao é ']', continua a empilhar na pilha normal
         {
-            textNormal.push(character);
+            strText += character;
         }
         else if(changeStack && character != '[') // pilha mudou e caractere não é '[', empilha na pilha Beiju
         {
-            textBeiju.push(character);
+            strText += character;
         }
     }
 
+    // se a pilha mudou, insere o texto na fila Beiju
+    if(changeStack)
+    {
+        textBeiju.insert(strText);
+    }
+    else
+    {
+        textNormal.push(strText);
+    }
+
     textNormal.moveStack(textAll); // move todos os elementos da pilha normal para a pilha final
-    textBeiju.moveStack(textAll); // move todos os elementos da pilha Beiju para a pilha final
+    textBeiju.moveQueue(textAll); // move todos os elementos da fila Beiju para a pilha final
     textAll.moveStackString(finalText); // move todos os elementos da pilha final para a string final
 
     return finalText;
 }
-
-/*
-
-You’re typing a long text with a broken keyboard. Well it’s not so badly broken. The only problem
-with the keyboard is that sometimes the “home” key or the “end” key gets automatically pressed
-(internally).
-You’re not aware of this issue, since you’re focusing on the text and did not even turn on the
-monitor! After you finished typing, you can see a text on the screen (if you turn on the monitor).
-In Chinese, we can call it Beiju. Your task is to find the Beiju text.
-Input
-There are several test cases. Each test case is a single line containing at least one and at most 100,000
-letters, underscores and two special characters ‘[’ and ‘]’. ‘[’ means the “Home” key is pressed
-internally, and ‘]’ means the “End” key is pressed internally. The input is terminated by end-of-file
-(EOF).
-Output
-For each case, print the Beiju text on the screen.
-Sample Input
-This_is_a_[Beiju]_text
-[[]][][]Happy_Birthday_to_Tsinghua_University
-Sample Output
-BeijuThis_is_a__text
-Happy_Birthday_to_Tsinghua_University
-
-*/
