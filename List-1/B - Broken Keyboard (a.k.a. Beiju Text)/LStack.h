@@ -24,6 +24,17 @@ template <typename E> class LStack: public Stack<E>
             clear();
         }
 
+        void clear()
+        {
+            while(top != NULL)
+            {
+                Link<E> *temp = top;
+                top = top->getNext();
+                delete temp;
+            }
+            size = 0;   
+        };
+
         void push(const E &it)
         {
             top = new Link<E>(it, top);

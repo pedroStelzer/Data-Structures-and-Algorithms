@@ -21,6 +21,7 @@ string beijuText(string text)
 {
     char character;
     bool changeStack = false;
+    string finalText = "";
     LStack<char> textNormal;
     LStack<char> textBeiju;
     LStack<char> textAll;
@@ -48,24 +49,25 @@ string beijuText(string text)
         }
     }
 
-    int lenStack = textNormal.length();
-    for(int i = 0; i < lenStack; i++)
+    int i = 0;
+    while(textNormal.length() != 0)
     {
         textAll.push(textNormal.topValue());
         textNormal.pop();
+
+        i++;
     }
 
-    lenStack = textBeiju.length();
-    for(int i = 0; i < lenStack; i++)
+    i = 0;
+    while(textBeiju.length() != 0)
     {
         textAll.push(textBeiju.topValue());
         textBeiju.pop();
+
+        i++;
     }
 
-    lenStack = textAll.length();
-    string finalText = "";
-
-    int i = 0;
+    i = 0;
     while(textAll.length() != 0)
     {
         finalText += textAll.topValue();
