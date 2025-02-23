@@ -255,7 +255,7 @@ int main()
 string beijuText(string text)
 {
     char character;
-    bool changeStack = false;
+    bool state = false; // tem 2 estados: empilha na pilha Normal e enfileira na fila Beiju
     string finalText = "";
     LStack<string> textNormal;
     LQueue<string> textBeiju;
@@ -269,31 +269,36 @@ string beijuText(string text)
     {
         character = text[i];
         
-        if(character == '[') // se o caractere for '[', muda a pilha normal para a fila Beiju
+        if(!state && character == '[') // se nao houve mudanca de estado e o caractere for '[', muda o estado atual e empilha o texto
         {
-            changeStack = true;
-            textNormal.push(strText);
+            state = true; // muda de estado
+            textNormal.push(strText); // empilha
             strText = "";
         }
-        else if(character == ']') // se o caractere for ']', muda a fila Beiju para a pilha normal
+        else if(state && character == ']') // se ja houve mudanca de estado e o caractere for ']', muda o estado atual e endileira o texto
         {
-            changeStack = false; //faz a troca
+            state = false; // muda de estado
+            textBeiju.insert(strText); // enfileira
+            strText = "";
+        }
+        else if(state && character == '[') // se ja houve mudanca de estado e o caractere for '[', permanece no estado atual e enfileira o texto
+        {
             textBeiju.insert(strText);
             strText = "";
         }
 
-        if(!changeStack && character != ']') // pilha nao mudou e caractere nao é ']', continua a empilhar na pilha normal
+        if(!state && character != ']') // pilha nao mudou de estado e caractere nao é ']', continua a empilhar na pilha normal
         {
             strText += character;
         }
-        else if(changeStack && character != '[') // pilha mudou e caractere não é '[', empilha na pilha Beiju
+        else if(state && character != '[') // pilha mudou de estado e caractere não é '[', enfileira na fila Beiju
         {
             strText += character;
         }
     }
 
-    // se a pilha mudou, insere o texto na fila Beiju
-    if(changeStack)
+    // se houve mudanca de estado da pilha, insere o texto na fila Beiju
+    if(state)
     {
         textBeiju.insert(strText);
     }
