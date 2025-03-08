@@ -12,7 +12,7 @@ int main()
     string opCode;
     string word = "";
     string operation = "";
-    HashTable<string> table(numOperations*2);
+    HashTable<string> table(101);
 
     cin >> numCases;
     cin >> numOperations;
@@ -30,7 +30,7 @@ int main()
             bool halt = false;
             while(!halt)
             {
-                if(operation[t] == NULL)
+                if(operation[t] == '\0')
                     halt = true;
                 else
                     word += operation[t];
@@ -42,7 +42,7 @@ int main()
                 table.insert(word);
             else if(opCode == "DEL")
                 table.remove(word);
-
+            
             opCode = "";
             word = "";
         }
@@ -54,9 +54,10 @@ int main()
 
     cout << numElements << endl;
 
-    for(int i = 0; i < lenTable; i++)
+    for(int key = 0; key < lenTable; key++)
     {
-        // imprime a tabela
+        if(table.value(key) != "")
+            cout << key << ":" << table.value(key) << endl;
     }
 
     return 0;

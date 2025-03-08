@@ -1,6 +1,9 @@
 #ifndef HASHTABLE_H
 #define HASHTABLE_H
 
+#include <string>
+#include <iostream>
+
 using namespace std;
 
 template <typename Type> class HashTable
@@ -9,23 +12,50 @@ template <typename Type> class HashTable
 
         int size;
         int numElements;
-        int key;
-        Type value;
         Type *Array;
-
-        int hash(int num)
-        {
-
-        };
 
         int hash(string element)
         {
+            int hashNumber = 0;
 
+            for(int i = 0; i < element.size(); i++)
+                hashNumber += element[i]*(i+1);
+
+            hashNumber *= 19;
+
+            return hashNumber;
+        };
+
+        int hashKey(string element, bool state)
+        {
+            int key =  hash(element) % size;
+
+            if(state && Array[key] != element)
+            {
+                for(int i = 1; i < 20; i++)
+                {
+                    if(Array[key] == "") 
+                        return key;
+                    else
+                        key = (key + i*i + 23*i) % size;
+                }
+            }
+            else if(!state && Array[key] != "")
+            {
+                for(int i = 1; i < 20; i++)
+                {
+                    if(Array[key] == element)
+                        return key;
+                    else
+                        key += (i*i + 23*i) % size;
+                }
+            }
+            return -1;
         };
 
         int hashFind(Type element)
         {
-
+            int key = hash(element);
         };
 
     public:
@@ -34,7 +64,7 @@ template <typename Type> class HashTable
         {
             size = h_size;
             Array = new Type[size];
-
+            numElements = 0;
         };
 
         ~HashTable()
@@ -45,21 +75,34 @@ template <typename Type> class HashTable
         int getNumElements()
         {
             return numElements;
-        }
+        };
 
-        void clear()
+        Type value(int key)
         {
-
+            return Array[key];
         };
 
         void insert(Type element)
         {
+            int key = hashKey(element, true);
 
+            if(key != -1)
+            {
+                Array[key] = element;
+                numElements++;
+            }
+            
         };
 
-        Type remove(Type element)
+        void remove(Type element)
         {
+            int key = hashKey(element, false);
 
+            if(key != -1)
+            {
+                Array[key] = "";
+                --numElements;    
+            }
         };
 
         Type find(Type element)
