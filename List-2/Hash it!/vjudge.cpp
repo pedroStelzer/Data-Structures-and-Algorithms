@@ -31,7 +31,7 @@ template <typename Type> class HashTable
             int key =  hash(element) % size;    // Gera uma chave inicial e aplica o modulo para caber no tamanho da tabela
             int newKey = key;
 
-            for(int i = 1; i < 20; i++)     // Tenta inserir o elemento ate 20x, depois disso se considera que nao ha posicao vazia pro elemento
+            for(int i = 1; i < 21; i++)     // Tenta inserir o elemento ate 20x, depois disso se considera que nao ha posicao vazia pro elemento
             {   
                 if(Array[newKey] == "")     // Se a posicao estiver vazia, retorna a chave para o elemento ser inserido
                     return newKey;
@@ -128,7 +128,6 @@ int main()
     string word = "";
     string operation = "";
     string value = "";
-    HashTable<string> table(MAX_SIZE);
 
     cin >> numCases;
 
@@ -137,6 +136,8 @@ int main()
     for(int i = 0; i < numCases; i++)
     {   
         cin >> numOperations;
+
+        HashTable<string> table(MAX_SIZE);
 
         for(int j = 0; j < numOperations+1; j++)
         {
