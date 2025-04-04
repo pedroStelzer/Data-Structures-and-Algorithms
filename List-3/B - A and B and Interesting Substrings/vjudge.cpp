@@ -66,7 +66,9 @@ int main()
                         for(bool parou = false; j < listSize-1 && !parou; j++)
                         {
                             if(list[j][1] == soma && index[list[k+1][0]-1] == soma)
+                            {
                                 countEqual++;
+                            }
                             else
                             {
                                 parou = true;
@@ -78,7 +80,9 @@ int main()
 
                     }
                     else if(list[j][1] == index[list[k+1][0]-1])
+                    {
                         count++;
+                    }
                 }
             }
         }

@@ -50,13 +50,13 @@ template <typename T> class Stack
             }
         };
 
-        void add()
+        void dec()
         {
             Node *temp = topNode;
 
             while(temp != nullptr)
             {
-                temp->data++;
+                temp->data--;
                 temp = temp->next;
             }
         };
@@ -64,16 +64,16 @@ template <typename T> class Stack
         void debug()
         {
             Node *temp = topNode;
-
-            cout << "\n\n Comecou debug \n\n";
+            Stack<char> result;
 
             while(temp != nullptr)
             {
-                cout << temp->data;
+                result.push(temp->data + '0');
                 temp = temp->next;
             }
 
-            cout << "\n\n Terminou debug \n\n";
+            while(!result.empty())
+                cout << result.pop() << " ";
         }
 
         T top() 
@@ -104,48 +104,34 @@ int main()
     Stack<int> nums;
     Stack<char> resultStack;
     string result = "";
-    int numElements = 0;
+    string code;
 
-    cin >> numElements;
+    cin >> code;
 
-    for(int i = 0; i < numElements; i++)
-    {   
-        int num;
-        cin >> num;
-        nums.push(num);
-    }
-
-    while(!nums.empty())
+    for(int i = 0; i < code.length(); i++)
     {
-        if(nums.lenght() > 1 && nums.top() > 1 && (nums.top() == nums.next()))
+        if(code[i] == '1')
         {
-            nums.pop();
-            resultStack.push('d');
-        }
-        else if(nums.top() > 1)
-        {
-            int temp = nums.pop()-1;
-            nums.add();
-
-            nums.push(temp);
             nums.push(1);
+        }
+        else if(code[i] == 'd')
+        {
+            int temp = nums.top();
+            nums.push(temp);
+        }
+        else if(code[i] == '+')
+        {
+            int temp1 = nums.pop();
+            int temp2 = nums.pop();
 
-            resultStack.push('+');
-        }
-        else if(nums.top() == 1)
-        {
-            nums.pop();
-            resultStack.push('1');
-        }
-        else
-        {
-            nums.top();
+            int sum = temp1 + temp2;
+
+            nums.dec();
+            nums.push(sum);
         }
     }
 
-    while(!resultStack.empty()) result += resultStack.pop();
-
-    cout << result;
+    nums.debug();
 
     return 0;
 }
