@@ -6,7 +6,7 @@ using namespace std;
 int main()
 {
     unordered_map<char, long long> alphabet;
-    unordered_map<char, unordered_map<long long, long long>> preSums;
+    unordered_map<char, vector<vector<long long>>> preSums;
     vector<long long> index;
     vector<char> letras;
     string s;
@@ -24,41 +24,41 @@ int main()
     long long lenghtString = s.length();
     long long count = 0;
     long long sum = 0;
-    long long prev = 0;
 
     for(long long i = 0; i < lenghtString; i++)
     {
         sum += alphabet[s[i]];
+        vector<long long> temp;
 
-        cout << "sum - alphabet[s[i]]: " << sum - alphabet[s[i]] << " prev:" << prev << endl;
-        
-        if(preSums.find(s[i]) != preSums.end() && preSums[s[i]].find(prev) != preSums[s[i]].end())
-        {
-            count += preSums[s[i]][prev];
-            preSums[s[i]][sum]++;
-        }
-        else if(preSums[s[i]].find(sum) == preSums[s[i]].end())
-        {
-            preSums[s[i]][sum] = 1;
-        }preSums[s[i]][sum] = 0;
+        temp.push_back(i);
+        temp.push_back(sum);
 
-        prev = sum;
+        preSums[s[i]].push_back(temp);
 
-        /*bool find = false;
+        index.push_back(sum);
+
+        bool find = false;
 
         for(long long j = 0; j < letras.size() && !find; j++) if(s[i] == letras[j]) find = true;
 
-        if(!find) letras.push_back(s[i]);*/
+        if(!find) letras.push_back(s[i]);
     }
 
     for(long long i = 0; i < preSums.size(); i++)
     {
-        char letra = i+'a';
-        long long len = preSums[letra].size();
+        vector<vector<long long>> list = preSums[letras[i]];
+        long long listSize = list.size();
 
-        for(int j = 0; j < len; j++)
+        if(listSize > 1)
         {
-            cout << letra << ": " << preSums[letra][j] << endl;
+            for(long long j = 0; j < listSize-1; j++)
+            {
+                for(long long k = j; k < listSize-1; k++)
+                {
+                    if(list[j][1] == index[list[k+1][0]-1])
+                        count++;
+                }
+            }
         }
     }
 
