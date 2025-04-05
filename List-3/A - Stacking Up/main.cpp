@@ -1,21 +1,21 @@
 #include <iostream>
 using namespace std;
 
-class Node
+template <typename T> class Node
 {
     public:
 
-        int data;
+        T data;
         Node *next;
 
-        Node(int value) : data(value), next(nullptr) {}
+        Node(T value) : data(value), next(nullptr) {}
 };
 
 template <typename T> class Stack
 {
     private:
 
-        Node *topNode;
+        Node<T> *topNode;
         int size;
 
     public:
@@ -31,7 +31,7 @@ template <typename T> class Stack
 
         void push(T value)
         {
-            Node *newNode = new Node(value);
+            Node<T> *newNode = new Node<T>(value);
             newNode->next = topNode;
             topNode = newNode;
             size++;
@@ -41,7 +41,7 @@ template <typename T> class Stack
         {
             if(!this->empty())
             {
-                Node *temp = topNode;
+                Node<T> *temp = topNode;
                 topNode = topNode->next;
                 T value = temp->data;
                 delete temp;
@@ -52,7 +52,7 @@ template <typename T> class Stack
 
         void dec()
         {
-            Node *temp = topNode;
+            Node<T> *temp = topNode;
 
             while(temp != nullptr)
             {
@@ -63,12 +63,12 @@ template <typename T> class Stack
 
         void debug()
         {
-            Node *temp = topNode;
-            Stack<char> result;
+            Node<T> *temp = topNode;
+            Stack<string> result;
 
             while(temp != nullptr)
             {
-                result.push(temp->data + '0');
+                result.push(to_string(temp->data));
                 temp = temp->next;
             }
 
