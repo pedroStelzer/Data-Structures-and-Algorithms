@@ -5,6 +5,7 @@
 #include "MergeSort/mergesort.h"
 #include "QuickSort/quicksort.h"
 #include "InsertionSort/insertionsort.h"
+#include "ShellSort/shellsort.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -41,9 +42,11 @@ int main()
 
         auto start_time = high_resolution_clock::now();
 
-        insertionsort(nums);
+        //insertionsort(nums);
         //mergesort(nums);
         //quicksort(nums);
+        //shellsort(nums);
+        
 
         /*for(int i = 0; i < n; i++)
             cout << nums[i] << endl;*/

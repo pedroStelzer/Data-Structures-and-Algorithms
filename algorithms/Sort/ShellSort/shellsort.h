@@ -2,8 +2,9 @@
 #define SHELLSORT_H
 
 #include <vector>
+#include <math.h>
 using namespace std;
 
-vector<int> shellsort();
+void shellsort(vector<int>& list);
 
 #endif //SHELLSORT_H

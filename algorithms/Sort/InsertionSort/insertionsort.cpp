@@ -9,7 +9,7 @@ void insertionsort(vector<int>& list)
         int num = list[i];
         int j = i-1;
 
-        while(j >= 0 && list[j] > num)
+        while(j >= 0 && num < list[j])
         {
             list[j+1] = list[j];
             j--;
