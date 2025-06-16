@@ -4,6 +4,7 @@
 #include <vector>
 using namespace std;
 
-vector<int> mergesort();
+void mergesort(vector<int>& list, int start, int end);
+void merge(vector<int>& list, int start, int mid, int end);
 
 #endif //MERGESORT_H
