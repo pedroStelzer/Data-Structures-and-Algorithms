@@ -4,6 +4,6 @@
 #include <vector>
 using namespace std;
 
-vector<int> insertionsort();
+void insertionsort(vector<int>& list);
 
 #endif //INSERTIONSORT_H

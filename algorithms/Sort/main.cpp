@@ -4,6 +4,7 @@
 #include <math.h>
 #include "MergeSort/mergesort.h"
 #include "QuickSort/quicksort.h"
+#include "InsertionSort/insertionsort.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -33,14 +34,15 @@ int main()
 
     while(n >= 0)
     {
-        cout << "Quantidade de iteracoes: ";
+        cout << "Quantidade de numeros: ";
         cin >> n;
 
         nums = sequence_gerenate(n);
 
         auto start_time = high_resolution_clock::now();
 
-        mergesort(nums);
+        insertionsort(nums);
+        //mergesort(nums);
         //quicksort(nums);
 
         /*for(int i = 0; i < n; i++)
@@ -48,9 +50,11 @@ int main()
         
         auto end_time = high_resolution_clock::now();
 
-        auto final_time = duration_cast<nanoseconds>(end_time - start_time);
+        auto ns_time = duration_cast<nanoseconds>(end_time - start_time);
+        auto s_time = duration_cast<seconds>(end_time - start_time);
 
-        cout << "Tempo de execucao: " << final_time.count() << " ns" << endl << endl;
+        cout << "Tempo de execucao: " << ns_time.count() << " ns" << endl;
+        cout << "Tempo de execucao: " << ns_time.count()/pow(10, 9) << " s" << endl << endl;
     }
 
     return 0;
