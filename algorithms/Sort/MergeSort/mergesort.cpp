@@ -2,6 +2,11 @@
 
 void mergesort(vector<int>& list, int start, int end)
 {
+    if(end == -1)
+    {
+        end = list.size()-1;
+    }
+    
     if(start < end)
     {
         int mid = (start + end)/2;

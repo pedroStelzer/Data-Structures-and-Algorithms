@@ -4,6 +4,7 @@
 #include <vector>
 using namespace std;
 
-vector<int> quicksort();
+void quicksort(vector<int>& list, int start = 0, int end = -1);
+int partition(vector<int>& list, int start, int end);
 
 #endif //QUICKSORT_H

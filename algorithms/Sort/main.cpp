@@ -3,6 +3,7 @@
 #include <chrono>
 #include <math.h>
 #include "MergeSort/mergesort.h"
+#include "QuickSort/quicksort.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -39,7 +40,8 @@ int main()
 
         auto start_time = high_resolution_clock::now();
 
-        mergesort(nums, 0, n-1);
+        mergesort(nums);
+        //quicksort(nums);
 
         /*for(int i = 0; i < n; i++)
             cout << nums[i] << endl;*/
