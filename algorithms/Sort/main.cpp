@@ -44,7 +44,7 @@ int main()
 
         //insertionsort(nums);
         //mergesort(nums);
-        //quicksort(nums);
+        quicksort(nums);
         //shellsort(nums);
         
 
