@@ -4,6 +4,6 @@
 #include <vector>
 using namespace std;
 
-vector<int> selectionsort();
+void selectionsort(vector<int>& nums);
 
 #endif //SELECTIONSORT_H
