@@ -4,7 +4,7 @@
 void quicksort(vector<int>& list, bool decrease_order, int start, int end)
 {
     if(end == -1) // valor padrao para a primeira chamada
-        end = list.size();
+        end = list.size()-1;
 
     if(start < end)
     {
