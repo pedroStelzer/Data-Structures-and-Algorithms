@@ -4,6 +4,6 @@
 #include <vector>
 using namespace std;
 
-vector<int> bubblesort();
+void bubblesort(vector<int>& nums);
 
 #endif //BUBBLESORT_H
