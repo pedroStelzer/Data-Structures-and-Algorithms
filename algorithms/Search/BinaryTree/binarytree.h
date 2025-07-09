@@ -20,7 +20,9 @@ template <typename E> class BinaryTree
         Node<E>* root;
 
         Node<E>* insert_helper(Node<E>* current, E value);
-        bool search_helper(Node<E>* current, E value);
+        Node<E>* search_helper(Node<E>* current, E value);
+        int depth_helper(Node<E>* root, Node<E>* target, int currentDepth = 0);
+        int height_helper(Node<E>* target);
 
         void preorder(Node<E>* node);
         void inorder(Node<E>* node);
@@ -32,6 +34,8 @@ template <typename E> class BinaryTree
         void insert(E value);
         void print_tree();
         void search(E value);
+        int height(E value);
+        int depth(E value);
 };
 
 template<typename E>
@@ -126,19 +130,22 @@ void BinaryTree<E>::postorder(Node<E>* node)
 };
 
 template<typename E>
-bool BinaryTree<E>::search_helper(Node<E>* current, E value)
+Node<E>* BinaryTree<E>::search_helper(Node<E>* current, E value)
 {
-    if(current == nullptr) return false;
+    if(current == nullptr) return nullptr;
 
-    if(current->data == value) return true;
+    if(current->data == value) return current;
 
-    return search_helper(current->left, value) || search_helper(current->right, value);
+    Node<E>* found = search_helper(current->left, value);
+    if (found != nullptr) return found;
+
+    return search_helper(current->right, value);
 }
 
 template<typename E>
 void BinaryTree<E>::search(E value)
 {
-    if(search_helper(this->root, value))
+    if(search_helper(this->root, value) != nullptr)
     {
         cout << "Element " << value << " is in the tree." << endl; 
     }
@@ -147,5 +154,67 @@ void BinaryTree<E>::search(E value)
         cout << "Element " << value << " is not in the tree." << endl;
     }
 }
+
+template<typename E>
+int BinaryTree<E>::height_helper(Node<E>* target)
+{
+    if(target == nullptr) return -1;
+
+    int leftHeight = height_helper(target->left);
+    int rightHeight = height_helper(target->right);
+
+    if(leftHeight >= rightHeight)
+    {
+        return 1+leftHeight;
+    }
+    else
+    {
+        return 1+rightHeight;
+    }
+};
+
+template<typename E>
+int BinaryTree<E>::height(E value)
+{
+    Node<E>* target = search_helper(this->root, value);
+
+    if(target != nullptr)
+    {
+        return height_helper(target);
+    }
+    else
+    {
+        return -1;
+    }
+};
+
+template<typename E>
+int BinaryTree<E>::depth_helper(Node<E>* root, Node<E>* target, int currentDepth)
+{
+    if(root == nullptr) return -1;
+
+    if(root == target) return currentDepth;
+
+    int left = depth_helper(root->left, target, currentDepth+1);
+    if(left != -1) return left;
+
+    int right = depth_helper(root->right, target, currentDepth+1);
+    return right;
+};
+
+template<typename E>
+int BinaryTree<E>::depth(E value)
+{
+    Node<E>* target = search_helper(this->root, value);
+
+    if(target != nullptr)
+    {
+        return depth_helper(this->root, target);
+    }
+    else
+    {
+        return -1;
+    }
+};
 
 #endif //BINARYTREE_H
