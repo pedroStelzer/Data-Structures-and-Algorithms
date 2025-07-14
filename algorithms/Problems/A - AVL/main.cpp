@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 
+// No da arvore AVL
 struct Node
 {
     int data;
@@ -10,40 +11,58 @@ struct Node
     Node(int value) : data(value), right(nullptr), left(nullptr) {};
 };
 
+// Classe da arvore AVL
 class AvlTree
 {
     private:
 
         Node* root;
 
-        Node* insert_helper(Node* root, Node* node)
-        {
+        // Metodo de insercao com balanceamento
+        Node* insertHelper(Node* root, Node* node)
+        {   
+            /* Insercao normal de uma BST */
             if(root == nullptr)
             {
                 root = node;
                 return root;
             }
             else if(node->data < root->data)
-                root->left = insert_helper(root->left, node);
+                root->left = insertHelper(root->left, node);
             else if(node->data > root->data)
-                root->right = insert_helper(root->right, node);
+                root->right = insertHelper(root->right, node);
+            /* -------------------------- */
 
+            // Calculo do fator de balanceamento
+            // altura(esquerda) - altura(direita)
             int bf = getBalanceFactor(root);
 
+            // Rotacao simples a direita
             if(bf > 1 && node->data < root->left->data)
+            {
+                cout << root->data << endl;
                 return rightRotate(root);
+            }
             
+            // Rotacao simples a esquerda
             if(bf < -1 && node->data > root->right->data)
+            {
+                cout << root->data << endl;
                 return leftRotate(root);
+            }
             
+            // Rotacao dupla esquerda/direita
             if(bf > 1 && node->data > root->left->data)
             {
+                cout << root->data << endl;
                 root->left = leftRotate(root->left);
                 return rightRotate(root);
             }
             
+            // Rotacao dupla direita/esquerda
             if(bf < -1 && node->data < root->right->data)
             {
+                cout << root->data << endl;
                 root->right = rightRotate(root->right);
                 return leftRotate(root);
             }
@@ -51,14 +70,16 @@ class AvlTree
             return root;
         };
 
+        // Retorna a diferenca entre a altura esquerda e altura direita
         int getBalanceFactor(Node* node)
         {
             if(node == nullptr)
                 return -1;
             else
-                return (height_helper(node->left) - height_helper(node->right));
+                return (heightHelper(node->left) - heightHelper(node->right));
         };
 
+        // Rotacao simples a esquerda
         Node* leftRotate(Node* root)
         {
             Node* newRoot = root->right;
@@ -70,6 +91,7 @@ class AvlTree
             return newRoot;
         };
 
+        // Rotacao simples a direita
         Node* rightRotate(Node* root)
         {
             Node* newRoot = root->left;
@@ -91,6 +113,7 @@ class AvlTree
                 root->right = deleteNodeHelper(root->right, value);
             else
             {
+                // No com apenas um ou nenhum filho
                 if(root->left == nullptr)
                 {
                     Node* temp = root->right;
@@ -103,7 +126,7 @@ class AvlTree
                     delete root;
                     return temp;
                 }
-                else
+                else // No com dois filhos
                 {
                     Node* temp = minValueNode(root->right);
                     root->data = temp->data;
@@ -111,19 +134,29 @@ class AvlTree
                 }
             }
 
+            // Calculo do fator de balancemaento depois da remocao
             int bf = getBalanceFactor(root);
 
+            // Rebalanceamentos
             if(bf == 2 && getBalanceFactor(root->left) >= 0)
+            {
+                cout << root->data << endl;
                 return rightRotate(root);
+            }
             else if(bf == 2 && getBalanceFactor(root->left) == -1)
             {
+                cout << root->data << endl;
                 root->left = leftRotate(root->left);
                 return rightRotate(root);
             }
             else if(bf == -2 && getBalanceFactor(root->right) <= 0)
+            {
+                cout << root->data << endl;
                 return leftRotate(root);
+            }
             else if(bf == -2 && getBalanceFactor(root->right) == 1)
             {
+                cout << root->data << endl;
                 root->right = rightRotate(root->right);
                 return leftRotate(root);
             }
@@ -131,6 +164,7 @@ class AvlTree
             return root;
         }
 
+        // Retorna o no com menor valor
         Node* minValueNode(Node* node)
         {
             Node* current = node;
@@ -141,40 +175,28 @@ class AvlTree
             return current;
         }
 
-        int depth_helper(Node* root, Node* target, int currentDepth = 0)
+        // Calculo da altura do no
+        int heightHelper(Node* target)
         {
-            if(root == nullptr) 
+            if(target == nullptr) 
                 return -1;
-
-            if(root == target) 
-                return currentDepth;
-
-            int left = depth_helper(root->left, target, currentDepth+1);
-
-            if(left != -1) 
-                return left;
-
-            int right = depth_helper(root->right, target, currentDepth+1);
-
-            return right;
-        };
-
-        int height_helper(Node* target)
-        {
-            if(target == nullptr) return -1;
-
-            int leftHeight = height_helper(target->left);
-            int rightHeight = height_helper(target->right);
-
-            if(leftHeight >= rightHeight)
-                return 1+leftHeight;
             else
-                return 1+rightHeight;
+            {
+                int leftHeight = heightHelper(target->left);
+                int rightHeight = heightHelper(target->right);
+
+                if(leftHeight >= rightHeight)
+                    return 1+leftHeight;
+                else
+                    return 1+rightHeight;
+            }
         };
 
+        /* Travessias da arvore */
         void preorder(Node* node)
         {
-            if(node == nullptr) return;
+            if(node == nullptr) 
+                return;
 
             cout << node->data << " ";
             preorder(node->left);
@@ -183,7 +205,8 @@ class AvlTree
 
         void inorder(Node* node)
         {
-            if(node == nullptr) return;
+            if(node == nullptr) 
+                return;
 
             inorder(node->left);
             cout << node->data << " ";
@@ -192,36 +215,65 @@ class AvlTree
         
         void postorder(Node* node)
         {
-            if(node == nullptr) return;
+            if(node == nullptr) 
+                return;
 
             postorder(node->left);
             postorder(node->right);
             cout << node->data << " ";
         };
+        /* -------------------- */
 
     public:
 
-        AvlTree() {this->root = nullptr;};
+        // Construtor
+        AvlTree() 
+        {
+            this->root = nullptr;
+        };
 
-        void insert(Node *node) {root = insert_helper(this->root, node);};
+        // Destrutor
+        ~AvlTree()
+        {
+            destroyTree(this->root);
+        }
 
-        void print_tree()
+        // Libera os nos da arvore
+        void destroyTree(Node* node)
+        {
+            if(node != nullptr)
+            {
+                destroyTree(node->left);
+                destroyTree(node->right);
+                delete node;
+            }
+        }
+
+        // Insere um novo no na arvore
+        void insert(Node *node) 
+        {
+            if(search(node->data) == nullptr)
+                root = insertHelper(this->root, node);
+        };
+
+        // Deleta um no com o valor dado
+        void deleteNode(int value)
+        {
+            root = deleteNodeHelper(this->root, value);
+        };
+
+        // Imprime as travessias da arvore
+        void printTree()
         {
             preorder(this->root);
             cout << endl;
             inorder(this->root);
             cout << endl;
             postorder(this->root);
+            cout << endl;
         };
 
-        void deleteNode(int value)
-        {
-            Node* node = search(value);
-
-            if(node != nullptr)
-                deleteNodeHelper(node, value);
-        };
-
+        // Busca um valor na arvore
         Node* search(int value)
         {
             if(root == nullptr)
@@ -243,27 +295,17 @@ class AvlTree
                 return nullptr;
             }
         }
-
-        /*
+        
+        // Retorna a altura de um no com o valor dado
         int height(int value)
         {
-            Node* target = search_helper(this->root, value);
+            Node* target = search(value);
 
             if(target != nullptr)
-                return height_helper(target);
+                return heightHelper(target);
             else
                 return -1;
         };
-
-        int depth(int value)
-        {
-            Node* target = search_helper(this->root, value);
-
-            if(target != nullptr) 
-                return depth_helper(this->root, target);
-            else 
-                return -1;
-        };*/
 };
 
 int main()
@@ -287,7 +329,7 @@ int main()
             tree->deleteNode(num);
     }
 
-    //tree->print_tree();
+    tree->printTree();
 
     return 0;
 }
