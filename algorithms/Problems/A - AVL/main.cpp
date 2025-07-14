@@ -51,28 +51,95 @@ class AvlTree
             return root;
         };
 
-        int getBalanceFactor(Node* node);
-
-        Node* leftRotate(Node* node);
-
-        Node* rightRotate(Node* node);
-
-        /*
-        Node* search_helper(Node* current, int value)
+        int getBalanceFactor(Node* node)
         {
-            if(current == nullptr) 
-                return nullptr;
+            if(node == nullptr)
+                return -1;
+            else
+                return (height_helper(node->left) - height_helper(node->right));
+        };
 
-            if(current->data == value) 
-                return current;
+        Node* leftRotate(Node* root)
+        {
+            Node* newRoot = root->right;
+            Node* nodeAux = newRoot->left;
 
-            Node* found = search_helper(current->left, value);
+            newRoot->left = root;
+            root->right = nodeAux;
 
-            if (found != nullptr) 
-                return found;
+            return newRoot;
+        };
 
-            return search_helper(current->right, value);
-        };*/
+        Node* rightRotate(Node* root)
+        {
+            Node* newRoot = root->left;
+            Node* nodeAux = newRoot->right;
+
+            newRoot->right = root;
+            root->left = nodeAux;
+
+            return newRoot; 
+        };
+
+        Node* deleteNodeHelper(Node* root, int value)
+        {
+            if(root == nullptr)
+                return root;
+            else if(value < root->data)
+                root->left = deleteNodeHelper(root->left, value);
+            else if(value > root->data)
+                root->right = deleteNodeHelper(root->right, value);
+            else
+            {
+                if(root->left == nullptr)
+                {
+                    Node* temp = root->right;
+                    delete root;
+                    return temp;
+                }
+                else if(root->right == nullptr)
+                {
+                    Node* temp = root->left;
+                    delete root;
+                    return temp;
+                }
+                else
+                {
+                    Node* temp = minValueNode(root->right);
+                    root->data = temp->data;
+                    root->right = deleteNodeHelper(root->right, temp->data);
+                }
+            }
+
+            int bf = getBalanceFactor(root);
+
+            if(bf == 2 && getBalanceFactor(root->left) >= 0)
+                return rightRotate(root);
+            else if(bf == 2 && getBalanceFactor(root->left) == -1)
+            {
+                root->left = leftRotate(root->left);
+                return rightRotate(root);
+            }
+            else if(bf == -2 && getBalanceFactor(root->right) <= 0)
+                return leftRotate(root);
+            else if(bf == -2 && getBalanceFactor(root->right) == 1)
+            {
+                root->right = rightRotate(root->right);
+                return leftRotate(root);
+            }
+
+            return root;
+        }
+
+        Node* minValueNode(Node* node)
+        {
+            Node* current = node;
+
+            while(current->left != nullptr)
+                current = current->left;
+            
+            return current;
+        }
 
         int depth_helper(Node* root, Node* target, int currentDepth = 0)
         {
@@ -141,18 +208,43 @@ class AvlTree
         void print_tree()
         {
             preorder(this->root);
+            cout << endl;
             inorder(this->root);
+            cout << endl;
             postorder(this->root);
         };
 
-        /*void search(int value)
+        void deleteNode(int value)
         {
-            if(search_helper(this->root, value) != nullptr)
-                cout << "Element " << value << " is in the tree." << endl; 
-            else
-                cout << "Element " << value << " is not in the tree." << endl;
+            Node* node = search(value);
+
+            if(node != nullptr)
+                deleteNodeHelper(node, value);
         };
 
+        Node* search(int value)
+        {
+            if(root == nullptr)
+                return root;
+            else
+            {
+                Node* temp = root;
+
+                while(temp != nullptr)
+                {
+                    if(value == temp->data)
+                        return temp;
+                    else if(value < temp->data)
+                        temp = temp->left;
+                    else
+                        temp = temp->right;
+                }
+
+                return nullptr;
+            }
+        }
+
+        /*
         int height(int value)
         {
             Node* target = search_helper(this->root, value);
@@ -190,16 +282,12 @@ int main()
         cin >> num;
 
         if(command == 'i')
-        {
             tree->insert(new Node(num));
-        }
-        else
-        {
-            // tree->delete();
-        }
+        else if(command == 'd')
+            tree->deleteNode(num);
     }
 
-    tree->print_tree();
+    //tree->print_tree();
 
     return 0;
 }
