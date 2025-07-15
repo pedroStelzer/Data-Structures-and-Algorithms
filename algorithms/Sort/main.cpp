@@ -8,6 +8,7 @@
 #include "ShellSort/shellsort.h"
 #include "SelectionSort/selectionsort.h"
 #include "BubbleSort/bubblesort.h"
+#include "HeapSort/heapsort.h"
 
 using namespace std;
 using namespace std::chrono;
@@ -47,12 +48,13 @@ int main()
         for(int i = 0; i < n; i++)
             cout << nums[i] << endl;
             
-        bubblesort(nums);
+        //bubblesort(nums);
         //insertionsort(nums);
         //selectionsort(nums);
         //mergesort(nums);
         //quicksort(nums);
         //shellsort(nums);
+        heapsort(nums);
         
         cout << endl;
         for(int i = 0; i < n; i++)

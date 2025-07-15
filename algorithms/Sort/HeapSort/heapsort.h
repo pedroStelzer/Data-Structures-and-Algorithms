@@ -2,8 +2,9 @@
 #define HEAPSORT_H
 
 #include <vector>
+#include "Heap.h"
 using namespace std;
 
-vector<int> heapsort();
+void heapsort(vector<int>& list);
 
 #endif //HEAPSORT_H
