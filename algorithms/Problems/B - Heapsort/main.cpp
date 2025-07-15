@@ -48,12 +48,28 @@ class MaxHeap
 
         int getMax()
         {
-            //
+            return harr[0];
         };
 
         int extractMax()
         {
-            //
+            if(heapSize <= 0)
+                return __INT_MAX__;
+
+            if(heapSize == 1)
+            {
+                heapSize--;
+                return harr[0];
+            }
+
+            int root = harr[0];
+
+            harr[0] = harr[heapSize-1];
+            heapSize--;
+
+            maxHeapify(0);
+
+            return root;
         };
 
         void insertKey(int k)
@@ -92,7 +108,25 @@ class MaxHeap
 
         void maxHeapify(int i)
         {
-            //
+            int l = left(i);
+            int r = right(i);
+
+            int largest = i;
+
+            if(l < heapSize && harr[l] > harr[i])
+                largest = l;
+            
+            if(r < heapSize && harr[r] > harr[largest])
+                largest = r;
+
+            if(largest != i)
+            {
+                int temp = harr[i];
+                harr[i] = harr[largest];
+                harr[largest] = temp;
+
+                maxHeapify(largest);
+            }
         };
 
         void linearSearch(int val)
