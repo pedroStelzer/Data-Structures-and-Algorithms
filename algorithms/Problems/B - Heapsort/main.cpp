@@ -3,15 +3,6 @@
 
 using namespace std;
 
-struct Node
-{
-    int data;
-    Node* left;
-    Node* right;
-
-    Node(int value) : data(value), left(nullptr), right(nullptr) {};
-};
-
 class MaxHeap
 {
     private:
@@ -96,14 +87,24 @@ class MaxHeap
             }
         };
 
-        void decreaseKey(int i, int newVal)
+        void increaseKey(int i, int newVal)
         {
-            //
+            harr[i] = newVal;
+
+            while(i != 0 && harr[parent(i)] < harr[i])
+            {
+                int temp = harr[i];
+                harr[i] = harr[parent(i)];
+                harr[parent(i)] = temp;
+
+                i = parent(i);
+            }
         };
 
         void deleteKey(int i)
         {
-            //
+            increaseKey(i, __INT_MAX__);
+            extractMax();
         };
 
         void maxHeapify(int i)
@@ -176,7 +177,7 @@ int main()
         << "Select Option number. Enter 0 to exit." << endl;
 
         cout << "1. Insert Key/Node/value" << endl;
-        cout << "2. Search Key/Node/" << endl;
+        cout << "2. Search Key/Node" << endl;
         cout << "3. Delete Key/Node" << endl;
         cout << "4. Get Max" << endl;
         cout << "5. Extract Max" << endl;
