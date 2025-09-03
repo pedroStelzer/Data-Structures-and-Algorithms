@@ -88,6 +88,7 @@ class SLinkedList
                 {
                     cout << "Node already exists" << endl;
                 }
+                else
                 {
                     n->next = ptr->next;
                     ptr->next = n;
