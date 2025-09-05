@@ -1,16 +1,16 @@
-#ifndef SINGLYLINKEDLIST_H
-#define SINGLYLINKEDLIST_H
+#ifndef CIRCULARLINKEDLIST_H
+#define CIRCULARLINKEDLIST_H
 #include "../Node/Node.h"
 #include "iostream"
 using namespace std;
 
-class SLinkedList
+class CLinkedList
 {
     public:
 
         Node *head;
 
-        SLinkedList(Node* h = nullptr)
+        CLinkedList(Node* h = nullptr)
         : head(h) {};
 
         // 1. Check if node exists using key value
@@ -19,16 +19,25 @@ class SLinkedList
             Node* temp = nullptr;
             Node* ptr = head;
 
-            while(ptr != nullptr)
+            if(ptr == nullptr)
             {
-                if(ptr->key == k)
-                {
-                    temp = ptr;
-                }
-                ptr = ptr->next;
+                return temp;
             }
+            else
+            {
+                do
+                {
+                    if(ptr->key == k)
+                    {
+                        temp = ptr;
+                    }
 
-            return temp;
+                    ptr = ptr->next;
+
+                } while(ptr != head);
+
+                return temp;   
+            }
         }
 
         // 2. Append a node to the list
@@ -43,17 +52,19 @@ class SLinkedList
                 if(head == nullptr)
                 {
                     head = n;
+                    n->next = head;
                     cout << "Node appended" << endl;
                 }
                 else
                 {
                     Node* ptr = head;
-                    while(ptr->next != nullptr)
+                    while(ptr->next != head)
                     {
                         ptr = ptr->next;
                     }
 
                     ptr->next = n;
+                    n->next = head;
                     cout << "Node appended" << endl;
                 }
             }
@@ -68,9 +79,27 @@ class SLinkedList
             }
             else
             {
-                n->next = head;
-                head = n;
-                cout << "Node prepended" << endl;
+                if(head == nullptr)
+                {
+                    head = n;
+                    n->next = head;
+                    cout << "Node prepended" << endl;
+                }
+                else
+                {
+                    Node* ptr = head;
+
+                    while(ptr->next != head)
+                    {
+                        ptr = ptr->next;
+                    }
+
+                    ptr->next = n;
+
+                    n->next = head;
+                    head = n;
+                    cout << "Node prepended" << endl;
+                }
             }
         };
 
@@ -90,9 +119,19 @@ class SLinkedList
                 }
                 else
                 {
-                    n->next = ptr->next;
-                    ptr->next = n;
-                    cout << "Node inserted" << endl;
+                    if(ptr->next == head)
+                    {
+                        n->next = head;
+                        ptr->next = n;
+                        cout << "Node inserted" << endl;
+                    }
+                    else
+                    {
+                        n->next = ptr->next;
+                        ptr->next = n;
+                        cout << "Node inserted" << endl;
+                    }
+                    
                 }
             }
         };
@@ -100,16 +139,35 @@ class SLinkedList
         // 5. Delete a node by unique key
         void deleteNode(int k)
         {
-            if(head == nullptr)
+            Node* ptr = nodeExist(k);
+
+            if(ptr == nullptr)
             {
-                cout << "Singly Linked List already empty" << endl;
+                cout << "Node does not exists" << endl;
             }
-            else if(head != nullptr)
+            else
             {
-                if(head->key == k)
+
+                if(ptr == head)
                 {
-                    head = head->next;
-                    cout << "Node unlinked" << endl;
+                    if(head->next == nullptr)
+                    {
+                        head = nullptr;
+                        cout << "Head node unlinked... List empty" << endl;
+                    }
+                    else
+                    {
+                        Node* ptr1 = head;
+
+                        while(ptr1->next != head)
+                        {
+                            ptr1 = ptr1->next;
+                        }
+
+                        ptr1->next = head->next;
+                        head = head->next;
+                        cout << "Node unlinked" << endl;
+                    }
                 }
                 else
                 {
@@ -131,15 +189,8 @@ class SLinkedList
                         }
                     }
 
-                    if(temp != nullptr)
-                    {
-                        prev->next = temp->next;
-                        cout << "Node unlinked" << endl;
-                    }
-                    else
-                    {
-                        cout << "Node does not exist" << endl;
-                    }
+                    prev->next = temp->next;
+                    cout << "Node unlinked" << endl;
                 }
             }
         };
@@ -165,20 +216,21 @@ class SLinkedList
         {
             if(head == nullptr)
             {
-                cout << "Singly Linked List is empty";
+                cout << "Circular Linked List is empty";
             }
             else
             {
-                cout << "\nSingly Linked List values: ";
+                cout << "\nhead address: " << head << endl;
+                cout << "Circular Linked List values: ";
                 Node* temp = head;
 
-                while(temp != nullptr)
+                do
                 {
-                    cout << "(" << temp->key << ", " << temp->data << ") --> ";
+                    cout << "(" << temp->key << ", " << temp->data << ", " << temp->next << ") --> ";
                     temp = temp->next;
-                }
+                } while(temp != head);
             }
         }
 };
 
-#endif //SINGLYLINKEDLIST_H
+#endif //CIRCULARLINKEDLIST_H
